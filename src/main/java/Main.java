@@ -20,7 +20,7 @@ public class Main {
 
 
             while (true) { // в цикле(!) принимаем подключения
-                System.out.println(Statistics.statisticsList);
+
                 try (
                         Socket socket = serverSocket.accept();
                         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -28,6 +28,7 @@ public class Main {
                 ) {
 
                     String jsonString = in.readLine(); //получаем json-строку от клиента
+                    System.out.println(jsonString);
                     //преобразуем ее в объект Purchase
                     GsonBuilder builder = new GsonBuilder();
                     Gson gson = builder.create();
