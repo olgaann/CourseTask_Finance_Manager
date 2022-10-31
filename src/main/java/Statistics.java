@@ -30,12 +30,12 @@ public class Statistics {
         return purchase;
     }
 
-    static JSONObject maxCategory() {
+    static JSONObject maxCategory(List<Statistics> statisticsList) {
         Map<String, Integer> map = new HashMap<>();
 
         for (Statistics statistics : statisticsList) {
             String key = statistics.getCategory();
-            if(map.containsKey(key)) {
+            if (map.containsKey(key)) {
                 int value = map.get(key);
                 value += statistics.getPurchase().getSum();
                 map.put(key, value);
@@ -51,8 +51,7 @@ public class Statistics {
                 .filter(entry -> entry.getValue() == maxSum)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
-        System.out.println(listOfMax);
-        System.out.println("сумма трат по каждой из максимальных категорий: " + maxSum);
+
 
         JSONObject obj = new JSONObject();
         JSONObject obj2 = new JSONObject();

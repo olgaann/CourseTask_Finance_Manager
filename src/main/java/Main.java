@@ -14,7 +14,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-
         try (ServerSocket serverSocket = new ServerSocket(PORT);) { // стартуем сервер один(!) раз
             System.out.println("Сервер стартует");
 
@@ -34,9 +33,10 @@ public class Main {
                     Gson gson = builder.create();
                     Purchase purchase = gson.fromJson(jsonString, Purchase.class);
                     Statistics statistics = new Statistics(purchase);
+                    System.out.println(statistics);
 
                     //формируем ответ в виде json-объекта
-                    JSONObject reply = Statistics.maxCategory();
+                    JSONObject reply = Statistics.maxCategory(Statistics.statisticsList);
                     //отправляем ответ клиенту
                     out.println(reply);
                 }
