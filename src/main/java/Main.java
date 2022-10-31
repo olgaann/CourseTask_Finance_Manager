@@ -2,21 +2,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.json.simple.JSONObject;
 
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-
 public class Main {
-
     private static final int PORT = 8989;
 
     public static void main(String[] args) {
 
         try (ServerSocket serverSocket = new ServerSocket(PORT);) { // стартуем сервер один(!) раз
             System.out.println("Сервер стартует");
-
 
             while (true) { // в цикле(!) принимаем подключения
 

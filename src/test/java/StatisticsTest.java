@@ -2,7 +2,6 @@ import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.util.*;
 
@@ -37,31 +36,26 @@ public class StatisticsTest {
         statisticsList.add(new Statistics(purchase3));
         statisticsList.add(new Statistics(purchase4));
 
-        System.out.println(statisticsList);
 
-        JSONObject obj = new JSONObject();
-        JSONObject obj2 = new JSONObject();
-        obj.put("sum", 80);
-        obj.put("categories", "еда, быт");
+        JSONObject objIn = new JSONObject();
+        JSONObject objOut = new JSONObject();
+        objIn.put("sum", 80);
+        objIn.put("categories", "еда, быт");
+        objOut.put("maxCategory", objIn);
 
-        obj2.put("maxCategory", obj);
-
-        System.out.println(obj2);
-
-        Assertions.assertEquals(obj2, Statistics.maxCategory(statisticsList));
+        Assertions.assertEquals(objOut, Statistics.maxCategory(statisticsList));
 
         statisticsList.remove(0);
         statisticsList.remove(0);
         System.out.println(statisticsList);
 
-        JSONObject obj3 = new JSONObject();
-        JSONObject obj4 = new JSONObject();
-        obj3.put("sum", 40);
-        obj3.put("category", "еда");
-        obj4.put("maxCategory", obj3);
+        objIn = new JSONObject();
+        objOut = new JSONObject();
+        objIn.put("sum", 40);
+        objIn.put("category", "еда");
+        objOut.put("maxCategory", objIn);
 
-        System.out.println(obj4);
-        Assertions.assertEquals(obj4, Statistics.maxCategory(statisticsList));
+        Assertions.assertEquals(objOut, Statistics.maxCategory(statisticsList));
 
     }
 }
