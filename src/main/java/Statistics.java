@@ -53,22 +53,22 @@ public class Statistics {
                 .collect(Collectors.toList());
 
 
-        JSONObject obj = new JSONObject();
-        JSONObject obj2 = new JSONObject();
-        obj.put("sum", maxSum);
+        JSONObject objIn = new JSONObject();
+        JSONObject objOut = new JSONObject();
+        objIn.put("sum", maxSum);
         if (listOfMax.size() == 1) {
-            obj.put("category", listOfMax.get(0));
+            objIn.put("category", listOfMax.get(0));
         } else {
             String fewMaxCategories = listOfMax.get(0);
             for (int i = 1; i < listOfMax.size(); i++) {
                 fewMaxCategories = fewMaxCategories + ", " + listOfMax.get(i);
             }
-            obj.put("categories", fewMaxCategories);
+            objIn.put("categories", fewMaxCategories);
         }
 
-        obj2.put("maxCategory", obj);
+        objOut.put("maxCategory", objIn);
 
-        return obj2;
+        return objOut;
     }
 
     static Map<String, String> getMapCategories(File file) { //метод получения мапы (покупка=категория) из файла categories.tsv
