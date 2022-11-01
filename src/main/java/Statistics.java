@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.json.simple.JSONObject;
 
 import java.io.*;
@@ -6,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class Statistics {
     static List<Statistics> statisticsList = new ArrayList<>();
-    File file = new File("categories.tsv");
+    static File file = new File("categories.tsv");
 
     private String category;
     private Purchase purchase;
@@ -88,6 +90,37 @@ public class Statistics {
 
         return map;
     }
+
+
+    public void autoSaveToJsonFile(File bin) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        String json = gson.toJson(this); //конвертируем объект Statistics в json-строку
+
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(bin, true))) {
+            writer.write(json + "\n");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    static void loadBinFromFile(File bin) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(bin))) {
+            String json;
+            while ((json = reader.readLine()) != null) {
+                Statistics statistics = gson.fromJson(json, Statistics.class);
+                statisticsList.add(statistics);
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public String toString() {
