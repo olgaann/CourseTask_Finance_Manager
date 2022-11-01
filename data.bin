@@ -1,3 +1,9 @@
-{"category":"быт","purchase":{"title":"мыло","date":"Nov 1, 2022, 12:00:00 AM","sum":100}}
-{"category":"еда","purchase":{"title":"сухарики","date":"Nov 1, 2022, 12:00:00 AM","sum":400}}
-{"category":"еда","purchase":{"title":"булка","date":"Nov 1, 2022, 12:00:00 AM","sum":400}}
+{"category":"быт","purchase":{"title":"мыло","date":{"year":2021,"month":11,"day":1},"sum":10}}
+{"category":"одежда","purchase":{"title":"тапки","date":{"year":2021,"month":11,"day":1},"sum":100}}
+{"category":"финансы","purchase":{"title":"акции","date":{"year":2022,"month":01,"day":1},"sum":1000}}
+{"category":"быт","purchase":{"title":"мыло","date":{"year":2022,"month":11,"day":1},"sum":100}}
+{"category":"быт","purchase":{"title":"мыло","date":{"year":2022,"month":11,"day":1},"sum":-100}}
+{"category":"еда","purchase":{"title":"колбаса","date":{"year":2022,"month":11,"day":1},"sum":40}}
+{"category":"быт","purchase":{"title":"мыло","date":{"year":2022,"month":11,"day":1},"sum":100}}
+{"category":"быт","purchase":{"title":"мыло","date":{"year":2022,"month":11,"day":1},"sum":100}}
+{"category":"быт","purchase":{"title":"мыло","date":{"year":2022,"month":11,"day":1},"sum":100}}

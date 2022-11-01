@@ -3,8 +3,10 @@ import com.google.gson.GsonBuilder;
 import org.json.simple.JSONObject;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 public class Statistics {
     static List<Statistics> statisticsList = new ArrayList<>();
@@ -32,10 +34,38 @@ public class Statistics {
         return purchase;
     }
 
-    static JSONObject maxCategory(List<Statistics> statisticsList) {
-        Map<String, Integer> map = new HashMap<>();
+    private static JSONObject maxCategory(String period) {//метод формирует JSONObject {"sum":...,"category":"..."} за период, переданный параметром
+        List<Statistics> filteredStatisticsList = new ArrayList<>(); //отфильтрованный список
+        LocalDate today = LocalDate.now();
 
-        for (Statistics statistics : statisticsList) {
+        switch (period) {
+            case "all":
+                filteredStatisticsList = statisticsList.stream().collect(Collectors.toList());
+                break;
+            case "year":
+                filteredStatisticsList = statisticsList.stream()
+                        .filter(statistics -> (statistics.getPurchase().getDate().getYear() == today.getYear()))
+                        .collect(Collectors.toList());
+                break;
+            case "month":
+                filteredStatisticsList = statisticsList.stream()
+                        .filter(statistics -> (statistics.getPurchase().getDate().getYear() == today.getYear())
+                                && (statistics.getPurchase().getDate().getMonth() == today.getMonth()))
+                        .collect(Collectors.toList());
+                break;
+            case "day":
+                filteredStatisticsList = statisticsList.stream()
+                        .filter(statistics -> (statistics.getPurchase().getDate().getYear() == today.getYear())
+                                && (statistics.getPurchase().getDate().getMonth() == today.getMonth())
+                                && (statistics.getPurchase().getDate().getDayOfMonth() == today.getDayOfMonth()))
+                        .collect(Collectors.toList());
+                break;
+        }
+
+
+        Map<String, Integer> map = new HashMap<>();//мапа "category"="sum"
+        //заполняяем мапу с помощью отфильтрованного списка:
+        for (Statistics statistics : filteredStatisticsList) {
             String key = statistics.getCategory();
             if (map.containsKey(key)) {
                 int value = map.get(key);
@@ -56,11 +86,11 @@ public class Statistics {
 
 
         JSONObject objIn = new JSONObject();
-        JSONObject objOut = new JSONObject();
+        //формируем JSONObject
         objIn.put("sum", maxSum);
         if (listOfMax.size() == 1) {
             objIn.put("category", listOfMax.get(0));
-        } else {
+        } else { //если несколько категорий имеют максимальную сумму:
             String fewMaxCategories = listOfMax.get(0);
             for (int i = 1; i < listOfMax.size(); i++) {
                 fewMaxCategories = fewMaxCategories + ", " + listOfMax.get(i);
@@ -68,7 +98,22 @@ public class Statistics {
             objIn.put("categories", fewMaxCategories);
         }
 
-        objOut.put("maxCategory", objIn);
+        return objIn;
+    }
+
+    static JSONObject buildReply() {//метод формирует "общий" JSONObject, за все периоды
+
+        JSONObject objOut = new JSONObject();
+
+        JSONObject objIn1 = maxCategory("all");
+        JSONObject objIn2 = maxCategory("year");
+        JSONObject objIn3 = maxCategory("month");
+        JSONObject objIn4 = maxCategory("day");
+
+        objOut.put("maxCategory", objIn1);
+        objOut.put("maxYearCategory", objIn2);
+        objOut.put("maxMonthCategory", objIn3);
+        objOut.put("maxDayCategory", objIn4);
 
         return objOut;
     }
@@ -92,7 +137,7 @@ public class Statistics {
     }
 
 
-    public void autoSaveToJsonFile(File bin) {
+    public void autoSaveToJsonFile(File bin) { // метод автосохранения объекта Statistics в файл
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         String json = gson.toJson(this); //конвертируем объект Statistics в json-строку
@@ -104,7 +149,7 @@ public class Statistics {
         }
     }
 
-    static void loadBinFromFile(File bin) {
+    static void loadBinFromFile(File bin) { // метод загрузки истории из файла
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
 
