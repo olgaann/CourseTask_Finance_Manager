@@ -1,5 +1,3 @@
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
@@ -8,15 +6,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Scanner;
 
 public class Purchase {
     private static final int PORT = 8989;
     private static final String HOST = "localhost";
     static Scanner scan = new Scanner(System.in);
-    static GsonBuilder builder = new GsonBuilder();
-
 
     private String title;
     private LocalDate date;
@@ -49,7 +44,7 @@ public class Purchase {
                 '}';
     }
 
-    public JSONObject convertPurchaseToJsonObj() { //конвертирует объект Purchase в json-объект
+    public JSONObject convertPurchaseToJsonObj() { // метод конвертирует объект Purchase в json-объект
         JSONObject object = new JSONObject();
         object.put("sum", this.getSum());
         object.put("title", this.getTitle());
@@ -60,7 +55,7 @@ public class Purchase {
         return object;
     }
 
-    public static void main(String[] args) { //клиент
+    public static void main(String[] args) { // клиентская часть
 
         while (true) {
 
@@ -94,7 +89,6 @@ public class Purchase {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
         }
     }
 }

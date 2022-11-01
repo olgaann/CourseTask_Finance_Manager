@@ -1,5 +1,3 @@
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -12,11 +10,9 @@ import java.time.LocalDate;
 public class Main {
     private static final int PORT = 8989;
 
-
     public static void main(String[] args) {
         File bin = new File("data.bin");
 
-        //внимание! красные предупреждения возникают из-за этого блока:
         try {
             if (!bin.createNewFile() || bin.length() != 0L) {
                 Statistics.loadBinFromFile(bin);
@@ -35,18 +31,16 @@ public class Main {
                         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         PrintWriter out = new PrintWriter(socket.getOutputStream());
                 ) {
-
                     String jsonString = in.readLine(); //получаем json-строку от клиента
                     System.out.println(jsonString);
-                    //пытаемся ее распарсить
+                    //разбираем ее:
                     JSONParser parser = new JSONParser();
                     Object object = parser.parse(jsonString);
                     JSONObject jsonObject = (JSONObject) object;
 
-
                     String title = (String) jsonObject.get("title");
-                    long summ = (long) jsonObject.get("sum");
-                    int sum = (int) summ;
+                    long sumLong = (long) jsonObject.get("sum");
+                    int sum = (int) sumLong;
                     String date = (String) jsonObject.get("date");
                     String[] arr = date.split("\\.");
                     int year = Integer.parseInt(arr[0]);
@@ -56,7 +50,6 @@ public class Main {
                     Purchase purchase = new Purchase(title, LocalDate.of(year, month, day), sum);
                     Statistics statistics = new Statistics(purchase);
                     statistics.autoSaveToJsonFile(bin);
-                    //System.out.println((statistics.getPurchase().getDate()).get);
                     System.out.println(statistics);
 
                     //формируем ответ в виде json-объекта

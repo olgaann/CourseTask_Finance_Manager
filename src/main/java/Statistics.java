@@ -3,10 +3,10 @@ import com.google.gson.GsonBuilder;
 import org.json.simple.JSONObject;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Calendar.AM;
 
 public class Statistics {
     static List<Statistics> statisticsList = new ArrayList<>();
@@ -34,31 +34,37 @@ public class Statistics {
         return purchase;
     }
 
-    static JSONObject maxCategory(String period) {
-        List<Statistics> filteredStatisticsList = new ArrayList<>(); //это будет отфильтрованный список
-        //нужно с помощью свитч сделать из лист
+    private static JSONObject maxCategory(String period) {//метод формирует JSONObject {"sum":...,"category":"..."} за период, переданный параметром
+        List<Statistics> filteredStatisticsList = new ArrayList<>(); //отфильтрованный список
+        LocalDate today = LocalDate.now();
+
         switch (period) {
             case "all":
                 filteredStatisticsList = statisticsList.stream().collect(Collectors.toList());
                 break;
-//            case "year":
-//
-//                break;
-//            case "month":
-//                break;
-            case "day":
-
+            case "year":
                 filteredStatisticsList = statisticsList.stream()
-                        .filter(statistics -> statistics.getPurchase().getDate().getYear() == 2021)
+                        .filter(statistics -> (statistics.getPurchase().getDate().getYear() == today.getYear()))
                         .collect(Collectors.toList());
                 break;
-            default:
-                System.out.println("неверный период");
+            case "month":
+                filteredStatisticsList = statisticsList.stream()
+                        .filter(statistics -> (statistics.getPurchase().getDate().getYear() == today.getYear())
+                                && (statistics.getPurchase().getDate().getMonth() == today.getMonth()))
+                        .collect(Collectors.toList());
+                break;
+            case "day":
+                filteredStatisticsList = statisticsList.stream()
+                        .filter(statistics -> (statistics.getPurchase().getDate().getYear() == today.getYear())
+                                && (statistics.getPurchase().getDate().getMonth() == today.getMonth())
+                                && (statistics.getPurchase().getDate().getDayOfMonth() == today.getDayOfMonth()))
+                        .collect(Collectors.toList());
+                break;
         }
 
 
-        Map<String, Integer> map = new HashMap<>();
-
+        Map<String, Integer> map = new HashMap<>();//мапа "category"="sum"
+        //заполняяем мапу с помощью отфильтрованного списка:
         for (Statistics statistics : filteredStatisticsList) {
             String key = statistics.getCategory();
             if (map.containsKey(key)) {
@@ -80,11 +86,11 @@ public class Statistics {
 
 
         JSONObject objIn = new JSONObject();
-        //JSONObject objOut = new JSONObject();
+        //формируем JSONObject
         objIn.put("sum", maxSum);
         if (listOfMax.size() == 1) {
             objIn.put("category", listOfMax.get(0));
-        } else {
+        } else { //если несколько категорий имеют максимальную сумму:
             String fewMaxCategories = listOfMax.get(0);
             for (int i = 1; i < listOfMax.size(); i++) {
                 fewMaxCategories = fewMaxCategories + ", " + listOfMax.get(i);
@@ -92,28 +98,21 @@ public class Statistics {
             objIn.put("categories", fewMaxCategories);
         }
 
-        //objOut.put("maxCategory", objIn);
-        //TODO добавить
-//        objOut.put("maxYearCategory", objIn2);
-//        objOut.put("maxMonthCategory", objIn3);
-//        objOut.put("maxDayCategory", objIn4);
-
-
         return objIn;
     }
 
-    static JSONObject buildReply() {
+    static JSONObject buildReply() {//метод формирует "общий" JSONObject, за все периоды
 
         JSONObject objOut = new JSONObject();
-        Date date = new Date();
+
         JSONObject objIn1 = maxCategory("all");
-//        JSONObject objIn2 = maxCategory(statisticsList, date, "year");
-//        JSONObject objIn3 = maxCategory(statisticsList, date, "month");
+        JSONObject objIn2 = maxCategory("year");
+        JSONObject objIn3 = maxCategory("month");
         JSONObject objIn4 = maxCategory("day");
 
         objOut.put("maxCategory", objIn1);
-//        objOut.put("maxYearCategory", objIn2);
-//        objOut.put("maxMonthCategory", objIn3);
+        objOut.put("maxYearCategory", objIn2);
+        objOut.put("maxMonthCategory", objIn3);
         objOut.put("maxDayCategory", objIn4);
 
         return objOut;
@@ -138,7 +137,7 @@ public class Statistics {
     }
 
 
-    public void autoSaveToJsonFile(File bin) {
+    public void autoSaveToJsonFile(File bin) { // метод автосохранения объекта Statistics в файл
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         String json = gson.toJson(this); //конвертируем объект Statistics в json-строку
@@ -150,7 +149,7 @@ public class Statistics {
         }
     }
 
-    static void loadBinFromFile(File bin) {
+    static void loadBinFromFile(File bin) { // метод загрузки истории из файла
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
 
