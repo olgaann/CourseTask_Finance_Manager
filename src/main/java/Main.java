@@ -8,7 +8,7 @@ import java.net.Socket;
 
 public class Main {
     private static final int PORT = 8989;
-    //static File bin = new File("data.bin");
+
 
     public static void main(String[] args) {
         File bin = new File("data.bin");
@@ -36,7 +36,7 @@ public class Main {
                     System.out.println(jsonString);
                     //преобразуем ее в объект Purchase
                     GsonBuilder builder = new GsonBuilder();
-                    Gson gson = builder.create();
+                    Gson gson = builder.setDateFormat("yyyy.MM.dd").create();
                     Purchase purchase = gson.fromJson(jsonString, Purchase.class);
                     Statistics statistics = new Statistics(purchase);
                     statistics.autoSaveToJsonFile(bin);

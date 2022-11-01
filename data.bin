@@ -1,7 +1,3 @@
-{"category":"быт","purchase":{"title":"мыло","date":"Nov 1, 2022, 10:07:24 AM","sum":10}}
-{"category":"быт","purchase":{"title":"мыло","date":"Nov 1, 2022, 10:10:11 AM","sum":10}}
-{"category":"быт","purchase":{"title":"мыло","date":"Nov 1, 2022, 10:13:10 AM","sum":10}}
-{"category":"еда","purchase":{"title":"сухарики","date":"Nov 1, 2022, 10:15:06 AM","sum":50}}
-{"category":"быт","purchase":{"title":"мыло","date":"Nov 1, 2022, 10:15:48 AM","sum":20}}
-{"category":"финансы","purchase":{"title":"акции","date":"Nov 1, 2022, 10:17:31 AM","sum":10}}
-{"category":"другое","purchase":{"title":"сок","date":"Nov 1, 2022, 10:17:37 AM","sum":200}}
+{"category":"быт","purchase":{"title":"мыло","date":"Nov 1, 2022, 12:00:00 AM","sum":100}}
+{"category":"еда","purchase":{"title":"сухарики","date":"Nov 1, 2022, 12:00:00 AM","sum":400}}
+{"category":"еда","purchase":{"title":"булка","date":"Nov 1, 2022, 12:00:00 AM","sum":400}}
