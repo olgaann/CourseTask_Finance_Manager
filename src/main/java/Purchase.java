@@ -44,7 +44,7 @@ public class Purchase {
     }
 
     public String convertPurchaseToJsonObj() { //конвертирует объект Purchase в json-строку
-        Gson gson = builder.create();
+        Gson gson = builder.setDateFormat("yyyy.MM.dd").create();
         String json = gson.toJson(this);
         return json;
     }
