@@ -6,6 +6,8 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Calendar.AM;
+
 public class Statistics {
     static List<Statistics> statisticsList = new ArrayList<>();
     static File file = new File("categories.tsv");
@@ -32,10 +34,32 @@ public class Statistics {
         return purchase;
     }
 
-    static JSONObject maxCategory(List<Statistics> statisticsList) {
+    static JSONObject maxCategory(String period) {
+        List<Statistics> filteredStatisticsList = new ArrayList<>(); //это будет отфильтрованный список
+        //нужно с помощью свитч сделать из лист
+        switch (period) {
+            case "all":
+                filteredStatisticsList = statisticsList.stream().collect(Collectors.toList());
+                break;
+//            case "year":
+//
+//                break;
+//            case "month":
+//                break;
+            case "day":
+
+                filteredStatisticsList = statisticsList.stream()
+                        .filter(statistics -> statistics.getPurchase().getDate().getYear() == 2021)
+                        .collect(Collectors.toList());
+                break;
+            default:
+                System.out.println("неверный период");
+        }
+
+
         Map<String, Integer> map = new HashMap<>();
 
-        for (Statistics statistics : statisticsList) {
+        for (Statistics statistics : filteredStatisticsList) {
             String key = statistics.getCategory();
             if (map.containsKey(key)) {
                 int value = map.get(key);
@@ -56,7 +80,7 @@ public class Statistics {
 
 
         JSONObject objIn = new JSONObject();
-        JSONObject objOut = new JSONObject();
+        //JSONObject objOut = new JSONObject();
         objIn.put("sum", maxSum);
         if (listOfMax.size() == 1) {
             objIn.put("category", listOfMax.get(0));
@@ -68,7 +92,29 @@ public class Statistics {
             objIn.put("categories", fewMaxCategories);
         }
 
-        objOut.put("maxCategory", objIn);
+        //objOut.put("maxCategory", objIn);
+        //TODO добавить
+//        objOut.put("maxYearCategory", objIn2);
+//        objOut.put("maxMonthCategory", objIn3);
+//        objOut.put("maxDayCategory", objIn4);
+
+
+        return objIn;
+    }
+
+    static JSONObject buildReply() {
+
+        JSONObject objOut = new JSONObject();
+        Date date = new Date();
+        JSONObject objIn1 = maxCategory("all");
+//        JSONObject objIn2 = maxCategory(statisticsList, date, "year");
+//        JSONObject objIn3 = maxCategory(statisticsList, date, "month");
+        JSONObject objIn4 = maxCategory("day");
+
+        objOut.put("maxCategory", objIn1);
+//        objOut.put("maxYearCategory", objIn2);
+//        objOut.put("maxMonthCategory", objIn3);
+        objOut.put("maxDayCategory", objIn4);
 
         return objOut;
     }
