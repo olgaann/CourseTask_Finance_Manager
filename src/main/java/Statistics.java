@@ -97,7 +97,7 @@ public class Statistics {
         Gson gson = builder.create();
         String json = gson.toJson(this); //конвертируем объект Statistics в json-строку
 
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(bin, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(bin, true))) {
             writer.write(json + "\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
