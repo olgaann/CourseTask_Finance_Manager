@@ -4,3 +4,5 @@
 {"category":"другое","purchase":{"title":"шампунь","date":{"year":2022,"month":11,"day":2},"sum":40}}
 {"category":"быт","purchase":{"title":"мыло","date":{"year":2022,"month":11,"day":2},"sum":100}}
 {"category":"быт","purchase":{"title":"мыло","date":{"year":2022,"month":11,"day":2},"sum":400}}
+{"category":"другое","purchase":{"title":"молоко","date":{"year":2022,"month":11,"day":2},"sum":10}}
+{"category":"финансы","purchase":{"title":"акции","date":{"year":2022,"month":11,"day":2},"sum":20000}}
