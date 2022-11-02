@@ -15,7 +15,7 @@ public class Statistics {
     private String category;
     private Purchase purchase;
 
-    public Statistics(Purchase purchase) {
+    public Statistics(Purchase purchase) throws IOException {
         this.purchase = purchase;
         if (getMapCategories(file).containsKey(purchase.getTitle())) {
             this.category = getMapCategories(file).get(purchase.getTitle());
@@ -118,7 +118,7 @@ public class Statistics {
         return objOut;
     }
 
-    static Map<String, String> getMapCategories(File file) { //метод получения мапы (покупка=категория) из файла categories.tsv
+    static Map<String, String> getMapCategories(File file) throws RuntimeException, IOException { //метод получения мапы (покупка=категория) из файла categories.tsv
         Map<String, String> map = new HashMap<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
@@ -127,29 +127,23 @@ public class Statistics {
                 String[] arr = line.split("\t");
                 map.put(arr[0], arr[1]);
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
 
         return map;
     }
 
 
-    public void autoSaveToJsonFile(File bin) { // метод автосохранения объекта Statistics в файл
+    public void autoSaveToJsonFile(File bin) throws IOException { // метод автосохранения объекта Statistics в файл
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         String json = gson.toJson(this); //конвертируем объект Statistics в json-строку
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(bin, true))) {
             writer.write(json + "\n");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
-    static void loadBinFromFile(File bin) { // метод загрузки истории из файла
+    static void loadBinFromFile(File bin) throws IOException { // метод загрузки истории из файла
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
 
@@ -159,10 +153,6 @@ public class Statistics {
                 Statistics statistics = gson.fromJson(json, Statistics.class);
                 statisticsList.add(statistics);
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
