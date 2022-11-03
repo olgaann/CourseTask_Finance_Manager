@@ -34,7 +34,7 @@ public class Statistics {
         return purchase;
     }
 
-    private static JSONObject maxCategory(String period) {//метод формирует JSONObject {"sum":...,"category":"..."} за период, переданный параметром
+     static JSONObject maxCategory(String period) {//метод формирует JSONObject {"sum":...,"category":"..."} за период, переданный параметром
         List<Statistics> filteredStatisticsList = new ArrayList<>(); //отфильтрованный список
         LocalDate today = LocalDate.now();
 
