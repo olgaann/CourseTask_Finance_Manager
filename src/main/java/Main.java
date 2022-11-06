@@ -47,13 +47,14 @@ public class Main {
                     int month = Integer.parseInt(arr[1]);
                     int day = Integer.parseInt(arr[2]);
 
-                    Purchase purchase = new Purchase(title, LocalDate.of(year, month, day), sum);
+                    LocalDate purchaseLocaleDate = LocalDate.of(year, month, day);
+                    Purchase purchase = new Purchase(title, purchaseLocaleDate, sum);
                     Statistics statistics = new Statistics(purchase);
                     statistics.autoSaveToJsonFile(bin);
                     System.out.println(statistics);
 
                     //формируем ответ в виде json-объекта
-                    JSONObject reply = Statistics.buildReply();
+                    JSONObject reply = Statistics.buildReply(purchaseLocaleDate);
                     //отправляем ответ клиенту
                     out.println(reply);
                 } catch (ParseException e) {

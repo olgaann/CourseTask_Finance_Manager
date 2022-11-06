@@ -34,9 +34,9 @@ public class Statistics {
         return purchase;
     }
 
-     static JSONObject maxCategory(String period) {//метод формирует JSONObject {"sum":...,"category":"..."} за период, переданный параметром
+    static JSONObject maxCategory(String period, LocalDate purchaseLocalDate) {//метод формирует JSONObject {"sum":...,"category":"..."} за период, переданный параметром
         List<Statistics> filteredStatisticsList = new ArrayList<>(); //отфильтрованный список
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(); //это должна быть дата покупки, а не сегодняшняя
 
         switch (period) {
             case "all":
@@ -44,71 +44,78 @@ public class Statistics {
                 break;
             case "year":
                 filteredStatisticsList = statisticsList.stream()
-                        .filter(statistics -> (statistics.getPurchase().getDate().getYear() == today.getYear()))
+                        .filter(statistics -> (statistics.getPurchase().getDate().getYear() == purchaseLocalDate.getYear()))
                         .collect(Collectors.toList());
                 break;
             case "month":
                 filteredStatisticsList = statisticsList.stream()
-                        .filter(statistics -> (statistics.getPurchase().getDate().getYear() == today.getYear())
-                                && (statistics.getPurchase().getDate().getMonth() == today.getMonth()))
+                        .filter(statistics -> (statistics.getPurchase().getDate().getYear() == purchaseLocalDate.getYear())
+                                && (statistics.getPurchase().getDate().getMonth() == purchaseLocalDate.getMonth()))
                         .collect(Collectors.toList());
                 break;
             case "day":
                 filteredStatisticsList = statisticsList.stream()
-                        .filter(statistics -> (statistics.getPurchase().getDate().getYear() == today.getYear())
-                                && (statistics.getPurchase().getDate().getMonth() == today.getMonth())
-                                && (statistics.getPurchase().getDate().getDayOfMonth() == today.getDayOfMonth()))
+                        .filter(statistics -> (statistics.getPurchase().getDate().getYear() == purchaseLocalDate.getYear())
+                                && (statistics.getPurchase().getDate().getMonth() == purchaseLocalDate.getMonth())
+                                && (statistics.getPurchase().getDate().getDayOfMonth() == purchaseLocalDate.getDayOfMonth()))
                         .collect(Collectors.toList());
                 break;
         }
 
 
         Map<String, Integer> map = new HashMap<>();//мапа "category"="sum"
-        //заполняяем мапу с помощью отфильтрованного списка:
-        for (Statistics statistics : filteredStatisticsList) {
-            String key = statistics.getCategory();
-            if (map.containsKey(key)) {
-                int value = map.get(key);
-                value += statistics.getPurchase().getSum();
-                map.put(key, value);
-            } else {
-                int value = statistics.getPurchase().getSum();
-                map.put(key, value);
-            }
-        }
-
-        int maxSum = Collections.max(map.values()); //ищем в мапе максимальное значение суммы покупок
-        //формируем список категорий, соотвествующих максимальному значению покупок
-        List<String> listOfMax = map.entrySet().stream()
-                .filter(entry -> entry.getValue() == maxSum)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-
-
         JSONObject objIn = new JSONObject();
-        //формируем JSONObject
-        objIn.put("sum", maxSum);
-        if (listOfMax.size() == 1) {
-            objIn.put("category", listOfMax.get(0));
-        } else { //если несколько категорий имеют максимальную сумму:
-            String fewMaxCategories = listOfMax.get(0);
-            for (int i = 1; i < listOfMax.size(); i++) {
-                fewMaxCategories = fewMaxCategories + ", " + listOfMax.get(i);
+
+        if (filteredStatisticsList.size() > 0) {
+            //заполняем мапу с помощью отфильтрованного списка:
+            for (Statistics statistics : filteredStatisticsList) {
+                String key = statistics.getCategory();
+                if (map.containsKey(key)) {
+                    int value = map.get(key);
+                    value += statistics.getPurchase().getSum();
+                    map.put(key, value);
+                } else {
+                    int value = statistics.getPurchase().getSum();
+                    map.put(key, value);
+                }
             }
-            objIn.put("categories", fewMaxCategories);
+
+            int maxSum = Collections.max(map.values()); //ищем в мапе максимальное значение суммы покупок
+            //формируем список категорий, соотвествующих максимальному значению покупок
+            List<String> listOfMax = map.entrySet().stream()
+                    .filter(entry -> entry.getValue() == maxSum)
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
+
+
+            objIn = new JSONObject();
+            //формируем JSONObject
+            objIn.put("sum", maxSum);
+            if (listOfMax.size() == 1) {
+                objIn.put("category", listOfMax.get(0));
+            } else { //если несколько категорий имеют максимальную сумму:
+                String fewMaxCategories = listOfMax.get(0);
+                for (int i = 1; i < listOfMax.size(); i++) {
+                    fewMaxCategories = fewMaxCategories + ", " + listOfMax.get(i);
+                }
+                objIn.put("categories", fewMaxCategories);
+            }
+        } else {
+            objIn.put("sum", 0);
+            objIn.put("category", "null");
         }
 
         return objIn;
     }
 
-    static JSONObject buildReply() {//метод формирует "общий" JSONObject, за все периоды
+    static JSONObject buildReply(LocalDate purchaseLocalDate) {//метод формирует "общий" JSONObject, за все периоды
 
         JSONObject objOut = new JSONObject();
 
-        JSONObject objIn1 = maxCategory("all");
-        JSONObject objIn2 = maxCategory("year");
-        JSONObject objIn3 = maxCategory("month");
-        JSONObject objIn4 = maxCategory("day");
+        JSONObject objIn1 = maxCategory("all", purchaseLocalDate);
+        JSONObject objIn2 = maxCategory("year", purchaseLocalDate);
+        JSONObject objIn3 = maxCategory("month", purchaseLocalDate);
+        JSONObject objIn4 = maxCategory("day", purchaseLocalDate);
 
         objOut.put("maxCategory", objIn1);
         objOut.put("maxYearCategory", objIn2);

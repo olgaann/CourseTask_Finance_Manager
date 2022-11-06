@@ -1,3 +1,4 @@
+import com.google.gson.Gson;
 import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
@@ -82,8 +83,14 @@ public class Purchase {
                 }
 
                 LocalDate localeDate = LocalDate.now();
+//                 LocalDate localeDate = LocalDate.of(2000, 02, 8);
+//                String json1 = "{\"title\": \"колбаса\", \"date\": \"2021.02.08\", \"sum\": 100}";
+//                String json2 = "{\"title\": \"тапки\", \"date\": \"2022.02.08\", \"sum\": 1000}";
+
+
                 Purchase purchase = new Purchase(product, localeDate, sum);
                 out.println(purchase.convertPurchaseToJsonObj());
+//                out.println(json1);
                 System.out.println("ответ сервера: " + in.readLine());
 
             } catch (IOException e) {
