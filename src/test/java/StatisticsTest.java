@@ -11,6 +11,7 @@ import java.util.*;
 
 public class StatisticsTest {
 
+    static LocalDate purchaseLocalDate = LocalDate.of(2021, 01, 01);
 
     @BeforeAll
     static void setUp() throws IOException {
@@ -22,6 +23,7 @@ public class StatisticsTest {
         new Statistics(purchase2);
         new Statistics(purchase3);
         new Statistics(purchase4);
+
     }
 
 
@@ -32,10 +34,10 @@ public class StatisticsTest {
         JSONObject objIn = new JSONObject();
 
         objIn.put("sum", 80);
-        objIn.put("category", "еда");
+        objIn.put("category", "быт");
 
 
-        Assertions.assertEquals(objIn, Statistics.maxCategory("year"));
+        Assertions.assertEquals(objIn, Statistics.maxCategory("year", purchaseLocalDate));
 
     }
 
@@ -49,23 +51,23 @@ public class StatisticsTest {
 
         JSONObject objIn2 = new JSONObject(); // year;
         objIn2.put("sum", 80);
-        objIn2.put("category", "еда");
+        objIn2.put("category", "быт");
 
 
         JSONObject objIn3 = new JSONObject(); // month;
         objIn3.put("sum", 80);
-        objIn3.put("category", "еда");
+        objIn3.put("category", "быт");
 
         JSONObject objIn4 = new JSONObject(); // day;
-        objIn4.put("sum", 40);
-        objIn4.put("category", "еда");
+        objIn4.put("sum", 0);
+        objIn4.put("category", "null");
 
         objOut.put("maxCategory", objIn1);
         objOut.put("maxYearCategory", objIn2);
         objOut.put("maxMonthCategory", objIn3);
         objOut.put("maxDayCategory", objIn4);
 
-        Assertions.assertEquals(objOut, Statistics.buildReply());
+        Assertions.assertEquals(objOut, Statistics.buildReply(purchaseLocalDate));
     }
 
 
